@@ -1,16 +1,18 @@
 from pypdf import PdfReader, PdfWriter
 
-date = "Test Text"
-owner = "Test Text"
-zoning = "Test Text"
-address = "Test Text"
-dimensions = "Test Text"
-floor_area = "Test Text"
+date = "Test Date"
+owner = "Test Owner"
+zoning = "Test Zoning"
+# address = "Test Address"
+dimensions = "Test Dimensions"
+floor_area = "Test Floor Area"
 
-input_file = "Form.pdf"
-output_file = str(address) + " - Property Report.pdf"
+input_file = "Burnaby Template - Form.pdf"
+# output_file = str(address) + " - Property Report.pdf"
+output_file = " - Property Report.pdf"
 
 reader = PdfReader(input_file)
+# print(reader.get_fields().keys()) # prints the fields in the pdf
 
 writer = PdfWriter()
 writer.append(reader)
@@ -19,24 +21,20 @@ fields = {
     "date": date,
     "owner": owner,
     "zoning": zoning,
-    "address": address,
+    # "address": address,
     "dimensions": dimensions,
-    "floor_area": floor_area,
+    # "floor_area": floor_area,
 }
 
 keys = fields.keys()
-field_counter = 0
 
 for count in range(len(reader.pages)):
-    if field_counter < len(fields):
-        field_dict = {f'{list(keys)[field_counter]}' : f'{fields[list(keys)[field_counter]]}'}
+    for field in range(len(fields)):
         writer.update_page_form_field_values(
             writer.pages[count],
-            field_dict,
+            {f"{list(keys)[field]}": f"{fields[list(keys)[field]]}"},
             auto_regenerate=False,
         )
-        field_counter += 1
-        print(field_dict)
 
 with open(output_file, "wb") as output_stream:
     writer.write(output_stream)
