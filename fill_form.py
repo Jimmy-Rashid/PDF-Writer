@@ -2,7 +2,28 @@ from pypdf import PdfReader, PdfWriter
 
 city = "Burnaby" + ", BC"
 
-def run(address, zoning, dimensions, floor_area, date, owner):
+
+def run(
+    address,
+    zoning,
+    dimensions,
+    floor_area,
+    date,
+    owner,
+    check_1,
+    check_2,
+    check_3,
+    check_4,
+    check_5,
+    check_6,
+    check_7,
+    check_8,
+    check_9,
+    check_no,
+    check_yes,
+    check_setbacks,
+    check_45_percent,
+):
     input_file = "Burnaby Template - Form.pdf"
     # output_file = str(address) + " - Property Report.pdf"
     output_file = "Property Report.pdf"
@@ -18,10 +39,23 @@ def run(address, zoning, dimensions, floor_area, date, owner):
         "city": city,
         "owner": owner,
         "zoning": zoning,
+        "check_1": check_1,
+        "check_2": check_2,
+        "check_3": check_3,
+        "check_4": check_4,
+        "check_5": check_5,
+        "check_6": check_6,
+        "check_7": check_7,
+        "check_8": check_8,
+        "check_9": check_9,
         "address_1": address,
         "address_2": address,
+        "check_no": check_no,
+        "check_yes": check_yes,
         "dimensions": dimensions,
         "floor_area": floor_area,
+        "check_setbacks": check_setbacks,
+        "check_45_percent": check_45_percent,
     }
 
     keys = fields.keys()
