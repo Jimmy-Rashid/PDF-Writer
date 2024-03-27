@@ -30,45 +30,29 @@ ttk.Label(mainframe, text="Enter Owner Name:").grid(column=1, row=6, sticky=(W, 
 # ----------------------------------------------------------------
 
 address = StringVar()
-width_entry = ttk.Entry(mainframe, width=20, textvariable=address)
-width_entry.grid(column=2, row=1, sticky=(W, E))
-
 zoning = StringVar()
-width_entry = ttk.Entry(mainframe, width=20, textvariable=zoning)
-width_entry.grid(column=2, row=2, sticky=(W, E))
-
 dimensions = StringVar()
-width_entry = ttk.Entry(mainframe, width=20, textvariable=dimensions)
-width_entry.grid(column=2, row=3, sticky=(W, E))
-
 floor_area = StringVar()
-width_entry = ttk.Entry(mainframe, width=20, textvariable=floor_area)
-width_entry.grid(column=2, row=4, sticky=(W, E))
-
 date = StringVar()
-width_entry = ttk.Entry(mainframe, width=20, textvariable=date)
-width_entry.grid(column=2, row=5, sticky=(W, E))
-
 owner = StringVar()
-width_entry = ttk.Entry(mainframe, width=20, textvariable=owner)
-width_entry.grid(column=2, row=6, sticky=(W, E))
+
+entries = [address, zoning, dimensions, floor_area, date, owner]
+
+for x, entry in enumerate(entries, start=1):
+    width_entry = ttk.Entry(mainframe, width=20, textvariable=entry)
+    width_entry.grid(column=2, row=x, sticky=(W, E))
 
 # ----------------------------------------------------------------
 
-address = str(address.get())
-zoning = str(zoning.get())
-dimensions = str(dimensions.get())
-floor_area = str(floor_area.get())
-date = str(date.get())
-owner = str(owner.get())
 
-ttk.Button(mainframe, text="Generate Report", command=run).grid(
+
+ttk.Button(mainframe, text="Generate Report", command=run(address, zoning, dimensions, floor_area, date, owner)).grid(
     column=2, row=7, sticky=(W, E)
 )
 
 for child in mainframe.winfo_children():
     child.grid_configure(padx=20, pady=10)
 width_entry.focus()
-window.bind("<Return>", run)
+window.bind("<Return>", run(address, zoning, dimensions, floor_area, date, owner))
 
 window.mainloop()

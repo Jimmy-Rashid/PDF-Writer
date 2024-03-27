@@ -1,17 +1,8 @@
-import main
-
 from pypdf import PdfReader, PdfWriter
 
 city = "Burnaby" + ", BC"
-# date = "Test Date"
-# owner = "Test Owner"
-# zoning = "Test Zoning"
-# address = "Test Address"
-# dimensions = "Test Dimensions"
-# floor_area = "Test Floor Area"
 
-
-def run():
+def run(address, zoning, dimensions, floor_area, date, owner):
     input_file = "Burnaby Template - Form.pdf"
     # output_file = str(address) + " - Property Report.pdf"
     output_file = "Property Report.pdf"
@@ -23,14 +14,14 @@ def run():
     writer.append(reader)
 
     fields = {
-        "date": main.date,
+        "date": date,
         "city": city,
-        "owner": main.owner,
-        "zoning": main.zoning,
-        "address_1": main.address,
-        "address_2": main.address,
-        "dimensions": main.dimensions,
-        "floor_area": main.floor_area,
+        "owner": owner,
+        "zoning": zoning,
+        "address_1": address,
+        "address_2": address,
+        "dimensions": dimensions,
+        "floor_area": floor_area,
     }
 
     keys = fields.keys()
