@@ -1,0 +1,3 @@
+([('main',
+   '/Users/jimmy/Documents/GitHub/PDF-Writer/dist/main',
+   'EXECUTABLE')],)
