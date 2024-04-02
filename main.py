@@ -1,4 +1,4 @@
-from fill_form import run
+from pypdf import PdfReader, PdfWriter
 
 from tkinter import *
 from tkinter import ttk
@@ -10,6 +10,86 @@ mainframe = ttk.Frame(window, padding="5 5 20 20")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 window.columnconfigure(0, weight=1)
 window.rowconfigure(0, weight=1)
+
+# Main function
+# ----------------------------------------------------------------
+
+
+def run(
+    address,
+    zoning,
+    dimensions,
+    floor_area,
+    date,
+    owner,
+    check_1,
+    check_2,
+    check_3,
+    check_4,
+    check_5,
+    check_6,
+    check_7,
+    check_8,
+    check_9,
+    check_no,
+    check_yes,
+    check_setbacks,
+    check_45_percent,
+):
+    city = "Burnaby" + ", BC"
+    input_file = "Burnaby Template - Form.pdf"
+    # output_file = str(address) + " - Property Report.pdf"
+    output_file = "Property Report.pdf"
+
+    reader = PdfReader(input_file)
+    # print(reader.get_fields().keys())  # prints the fields in the pdf
+
+    writer = PdfWriter()
+    writer.append(reader)
+
+    fields = {
+        "date": date,
+        "city": city,
+        "owner": owner,
+        "zoning": zoning,
+        "check_1": check_1,
+        "check_2": check_2,
+        "check_3": check_3,
+        "check_4": check_4,
+        "check_5": check_5,
+        "check_6": check_6,
+        "check_7": check_7,
+        "check_8": check_8,
+        "check_9": check_9,
+        "address_1": address,
+        "address_2": address,
+        "check_no": check_no,
+        "check_yes": check_yes,
+        "dimensions": dimensions,
+        "floor_area": floor_area,
+        "check_setbacks": check_setbacks,
+        "check_45_percent": check_45_percent,
+    }
+
+    keys = fields.keys()
+
+    for count in range(len(reader.pages)):
+        for field in range(len(fields)):
+            writer.update_page_form_field_values(
+                writer.pages[count],
+                {f"{list(keys)[field]}": f"{fields[list(keys)[field]]}"},
+                auto_regenerate=False,
+            )
+
+    with open(output_file, "wb") as output_stream:
+        writer.write(output_stream)
+
+    # # prints keys and values in the dict
+    # for x in range(7):
+    #     print(f"{list(keys)[x]}"+": "+f"{fields[list(keys)[x]]}")
+
+
+# ----------------------------------------------------------------
 
 # Labels
 # ----------------------------------------------------------------
@@ -44,25 +124,25 @@ for x, label_text in enumerate(text_bank, start=1):
 # Entry
 # ----------------------------------------------------------------
 
-date = StringVar()
-owner = StringVar()
-zoning = StringVar()
-address = StringVar()
-check_1 = StringVar()
-check_2 = StringVar()
-check_3 = StringVar()
-check_4 = StringVar()
-check_5 = StringVar()
-check_6 = StringVar()
-check_7 = StringVar()
-check_8 = StringVar()
-check_9 = StringVar()
-check_no = StringVar()
-check_yes = StringVar()
-floor_area = StringVar()
-dimensions = StringVar()
-check_setbacks = StringVar()
-check_45_percent = StringVar()
+date = StringVar(value="")
+owner = StringVar(value="")
+zoning = StringVar(value="")
+address = StringVar(value="")
+check_1 = StringVar(value="/Off")
+check_2 = StringVar(value="/Off")
+check_3 = StringVar(value="/Off")
+check_4 = StringVar(value="/Off")
+check_5 = StringVar(value="/Off")
+check_6 = StringVar(value="/Off")
+check_7 = StringVar(value="/Off")
+check_8 = StringVar(value="/Off")
+check_9 = StringVar(value="/Off")
+check_no = StringVar(value="/Off")
+check_yes = StringVar(value="/Off")
+floor_area = StringVar(value="")
+dimensions = StringVar(value="")
+check_setbacks = StringVar(value="/Off")
+check_45_percent = StringVar(value="/Off")
 
 entries = [
     address,

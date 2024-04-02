@@ -74,3 +74,5 @@ def run(
     # # prints keys and values in the dict
     # for x in range(7):
     #     print(f"{list(keys)[x]}"+": "+f"{fields[list(keys)[x]]}")
+
+run(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
