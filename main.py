@@ -38,8 +38,8 @@ def run(
 ):
     city = "Burnaby" + ", BC"
     input_file = "Burnaby Template - Form.pdf"
-    # output_file = str(address) + " - Property Report.pdf"
-    output_file = "Property Report.pdf"
+    output_file = str(address) + " - Property Report.pdf"
+    # output_file = "Property Report.pdf"
 
     reader = PdfReader(input_file)
     # print(reader.get_fields().keys())  # prints the fields in the pdf
