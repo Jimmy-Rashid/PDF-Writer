@@ -6,9 +6,8 @@ from tkinter import filedialog
 
 import datetime
 
-date = datetime.datetime.now().strftime("%B %d, %Y")
-
 window = Tk()
+window.update_idletasks()
 window.title("Property Report Creator")
 
 mainframe = ttk.Frame(window, padding="5 5 20 20")
@@ -41,10 +40,9 @@ def run(
     check_setbacks,
     check_45_percent,
 ):
-    city = "Burnaby" + ", BC"
+    city.set(city.get() + ", BC")
     input_file = "Burnaby Template - Form.pdf"
     output_file = str(address) + " - Property Report.pdf"
-    # output_file = "Property Report.pdf"
 
     reader = PdfReader(input_file)
     # print(reader.get_fields().keys())  # prints the fields in the pdf
@@ -99,8 +97,11 @@ def run(
 # Reads AutoProp report
 # ----------------------------------------------------------------
 
-file = filedialog.askopenfile(mode='r')
-autoprop_reader = PdfReader(file.name)
+# file = filedialog.askopenfile(mode="r")
+# autoprop_reader = PdfReader(file.name)
+
+file = "autoprop reader/AUTOPROP-R-7170-DOW-AV--Burnaby-V5J-3W9.pdf"
+autoprop_reader = PdfReader(file)
 
 page_1 = autoprop_reader.pages[0].extract_text()
 page_2 = autoprop_reader.pages[1].extract_text()
@@ -111,30 +112,41 @@ list_2 = []
 for line in page_1.splitlines():
     list_1.append(line)
 
-address = list_1[1]
-city = list_1[2]
-postal_code = list_1[3]
-country = list_1[4]
-property_id = list_1[5].split(" ")[1]  # unused in report
+address = StringVar(value=f"{list_1[1]}")
+city = StringVar(value=f"{list_1[2]}")
+country = StringVar(value=f"{list_1[4]}")  # unused in report
+postal_code = StringVar(value=f"{list_1[3]}")  # unused in report
+property_id = StringVar(value=f"{list_1[5].split(' ')[1]}")  # unused in report
 
-zoning = ""
-dimensions = ""
-floor_area = ""
+zoning = StringVar(value="")
+dimensions = StringVar(value="")
+floor_area = StringVar(value="")
+
+date = StringVar(value=f"{datetime.datetime.now().strftime('%B %d, %Y')}")
 
 for line in page_2.splitlines():
     if line.find("Zoning") != -1:
-        zoning = line.split(" ")[1]
+        zoning.set(line.split(" ")[1])
     if line.find("Dimensions") != -1:
-        dimensions = " ".join(line.split(" ")[3:6])
+        dimensions.set(" ".join(line.split(" ")[3:6]))
     if line.find("Floor Area") != -1:
-        floor_area = line.split(" ")[2]
+        floor_area.set(line.split(" ")[2])
+
 # ----------------------------------------------------------------
 
 # Labels
 # ----------------------------------------------------------------
 
-text_bank = [
+text_bank_1 = [
+    "Address",
+    "Zoning District",
+    "Lot Dimensions",
+    "Floor Area",
+    "Date",
     "Owner Name",
+]
+
+text_bank_2 = [
     "Check 1",
     "Check 2",
     "Check 3",
@@ -142,6 +154,9 @@ text_bank = [
     "Check 5",
     "Check 6",
     "Check 7",
+]
+
+text_bank_3 = [
     "Check 8",
     "Check 9",
     "Check No",
@@ -150,8 +165,14 @@ text_bank = [
     "Check 45%",
 ]
 
-for x, label_text in enumerate(text_bank, start=1):
+for x, label_text in enumerate(text_bank_1, start=1):
     ttk.Label(mainframe, text=label_text).grid(column=1, row=x, sticky=(W, E))
+
+for x, label_text in enumerate(text_bank_2, start=1):
+    ttk.Label(mainframe, text=label_text).grid(column=3, row=x, sticky=(W, E))
+    
+for x, label_text in enumerate(text_bank_3, start=1):
+    ttk.Label(mainframe, text=label_text).grid(column=5, row=x, sticky=(W, E))
 
 # ----------------------------------------------------------------
 
@@ -174,6 +195,11 @@ check_setbacks = StringVar(value="/Off")
 check_45_percent = StringVar(value="/Off")
 
 entries = [
+    address,
+    zoning,
+    dimensions,
+    floor_area,
+    date,
     owner,
 ]
 
@@ -198,21 +224,26 @@ for x, entry in enumerate(entries, start=1):
         column=2, row=x, sticky=(W, E)
     )
 
-for x, check in enumerate(check_list, start=2):
-    ttk.Checkbutton(mainframe, variable=check, onvalue="/Yes", offvalue="/Off").grid(
-        column=2, row=x, sticky=(W, E)
-    )
+for x, check in enumerate(check_list, start=1):
+    if x <= 7:
+        ttk.Checkbutton(
+            mainframe, variable=check, onvalue="/Yes", offvalue="/Off"
+        ).grid(column=4, row=x, sticky=(W, E))
+    else:
+        ttk.Checkbutton(
+            mainframe, variable=check, onvalue="/Yes", offvalue="/Off"
+        ).grid(column=6, row=x-7, sticky=(W, E))
 
 # ----------------------------------------------------------------
 
 
 def setup():
     run(
-        address,
-        zoning,
-        dimensions,
-        floor_area,
-        date,
+        address.get(),
+        zoning.get(),
+        dimensions.get(),
+        floor_area.get(),
+        date.get(),
         owner.get(),
         check_1.get(),
         check_2.get(),
@@ -231,12 +262,11 @@ def setup():
 
 
 ttk.Button(mainframe, text="Generate Report", command=setup).grid(
-    column=2, row=15, sticky=(W, E)
+    column=5, columnspan=2, row=7, sticky=(W, E)
 )
 
 for child in mainframe.winfo_children():
     child.grid_configure(padx=20, pady=10)
-# width_entry.focus()
 window.bind("<Return>", setup)
 
 window.mainloop()
