@@ -2,6 +2,7 @@ from pypdf import PdfReader, PdfWriter
 
 from tkinter import *
 from tkinter import ttk
+from tkinter import font
 from tkinter import filedialog
 
 import datetime
@@ -10,22 +11,24 @@ window = Tk()
 window.update_idletasks()
 window.title("Property Report Creator")
 
-mainframe = ttk.Frame(window, padding="5 5 20 20")
+mainframe = ttk.Frame(window, padding="5 20 5 20")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 window.columnconfigure(0, weight=1)
 window.rowconfigure(0, weight=1)
+
+text_font = font.Font(family="Yu-Mincho", size=12, weight='normal')
 
 # Main function
 # ----------------------------------------------------------------
 
 
 def run(
+    owner,
     address,
     zoning,
     dimensions,
     floor_area,
     date,
-    owner,
     check_1,
     check_2,
     check_3,
@@ -40,7 +43,7 @@ def run(
     check_setbacks,
     check_45_percent,
 ):
-    city.set(city.get() + ", BC")
+    city_text = str(city.get()) + ", BC"
     input_file = "Burnaby Template - Form.pdf"
     output_file = str(address) + " - Property Report.pdf"
 
@@ -52,7 +55,7 @@ def run(
 
     fields = {
         "date": date,
-        "city": city,
+        "city": city_text,
         "owner": owner,
         "zoning": zoning,
         "check_1": check_1,
@@ -138,41 +141,35 @@ for line in page_2.splitlines():
 # ----------------------------------------------------------------
 
 text_bank_1 = [
+    "Owner Name",
     "Address",
     "Zoning District",
     "Lot Dimensions",
     "Floor Area",
     "Date",
-    "Owner Name",
 ]
 
 text_bank_2 = [
-    "Check 1",
-    "Check 2",
-    "Check 3",
-    "Check 4",
-    "Check 5",
-    "Check 6",
-    "Check 7",
-]
-
-text_bank_3 = [
-    "Check 8",
-    "Check 9",
-    "Check No",
-    "Check Yes",
-    "Check Setbacks",
-    "Check 45%",
+    "Property located in an eligible zoning district",
+    "Single-family home with vehicular access to the rear yard\nfrom a side or rear lane or residential street",
+    "Corner lot approval obtained from the engineering dpartment",
+    "Complies with Streamside Protection and Enhancement Area regulations",
+    "Accommodates up to three units (principal, secondary, laneway home),\nwhile remaining under a single title",
+    "Space for one van-accessible parking with electric vehicle charging",
+    "Allows for the provision of a private outdoor space and a \nrequired pathway access from the street",
+    "Laneway home has separate sewer, water, and power services",
+    "Free from heritage conservation constraints",
+    "Not able to build laneway home",
+    "Able to build laneway home",
+    "Maximum coverage dictated by setbacks",
+    "Maximum coverage dictated by 45% of area",
 ]
 
 for x, label_text in enumerate(text_bank_1, start=1):
-    ttk.Label(mainframe, text=label_text).grid(column=1, row=x, sticky=(W, E))
+    ttk.Label(mainframe, text=label_text, font=text_font).grid(column=1, row=x, sticky=(W, E))
 
 for x, label_text in enumerate(text_bank_2, start=1):
-    ttk.Label(mainframe, text=label_text).grid(column=3, row=x, sticky=(W, E))
-    
-for x, label_text in enumerate(text_bank_3, start=1):
-    ttk.Label(mainframe, text=label_text).grid(column=5, row=x, sticky=(W, E))
+    ttk.Label(mainframe, text=label_text, font=text_font).grid(column=3, row=x, sticky=(W, E))
 
 # ----------------------------------------------------------------
 
@@ -195,12 +192,12 @@ check_setbacks = StringVar(value="/Off")
 check_45_percent = StringVar(value="/Off")
 
 entries = [
+    owner,
     address,
     zoning,
     dimensions,
     floor_area,
     date,
-    owner,
 ]
 
 check_list = [
@@ -225,26 +222,21 @@ for x, entry in enumerate(entries, start=1):
     )
 
 for x, check in enumerate(check_list, start=1):
-    if x <= 7:
-        ttk.Checkbutton(
-            mainframe, variable=check, onvalue="/Yes", offvalue="/Off"
-        ).grid(column=4, row=x, sticky=(W, E))
-    else:
-        ttk.Checkbutton(
-            mainframe, variable=check, onvalue="/Yes", offvalue="/Off"
-        ).grid(column=6, row=x-7, sticky=(W, E))
+    ttk.Checkbutton(mainframe, variable=check, onvalue="/Yes", offvalue="/Off").grid(
+        column=4, row=x, sticky=(W, E)
+    )
 
 # ----------------------------------------------------------------
 
 
 def setup():
     run(
+        owner.get(),
         address.get(),
         zoning.get(),
         dimensions.get(),
         floor_area.get(),
         date.get(),
-        owner.get(),
         check_1.get(),
         check_2.get(),
         check_3.get(),
@@ -262,7 +254,7 @@ def setup():
 
 
 ttk.Button(mainframe, text="Generate Report", command=setup).grid(
-    column=5, columnspan=2, row=7, sticky=(W, E)
+    column=3, columnspan=2, row=14, sticky=(W, E)
 )
 
 for child in mainframe.winfo_children():
