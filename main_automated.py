@@ -12,11 +12,14 @@ window.update_idletasks()
 window.title("Property Report Creator")
 
 mainframe = ttk.Frame(window, padding="5 20 5 20")
-mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+mainframe.grid(column=0, row=0, sticky=(N))
 window.columnconfigure(0, weight=1)
 window.rowconfigure(0, weight=1)
 
-text_font = font.Font(family="Yu-Mincho", size=12, weight='normal')
+text_font = font.Font(size=12, weight="normal")
+
+style = ttk.Style()
+style.configure("TButton", font=text_font)
 
 # Main function
 # ----------------------------------------------------------------
@@ -166,10 +169,14 @@ text_bank_2 = [
 ]
 
 for x, label_text in enumerate(text_bank_1, start=1):
-    ttk.Label(mainframe, text=label_text, font=text_font).grid(column=1, row=x, sticky=(W, E))
+    ttk.Label(mainframe, text=label_text, font=text_font).grid(
+        column=1, row=x, sticky=(W, E)
+    )
 
 for x, label_text in enumerate(text_bank_2, start=1):
-    ttk.Label(mainframe, text=label_text, font=text_font).grid(column=3, row=x, sticky=(W, E))
+    ttk.Label(mainframe, text=label_text, font=text_font).grid(
+        column=3, row=x, sticky=(W, E)
+    )
 
 # ----------------------------------------------------------------
 
@@ -217,7 +224,7 @@ check_list = [
 ]
 
 for x, entry in enumerate(entries, start=1):
-    ttk.Entry(mainframe, width=20, textvariable=entry).grid(
+    ttk.Entry(mainframe, width=20, font=text_font, textvariable=entry).grid(
         column=2, row=x, sticky=(W, E)
     )
 
@@ -253,8 +260,8 @@ def setup():
     )
 
 
-ttk.Button(mainframe, text="Generate Report", command=setup).grid(
-    column=3, columnspan=2, row=14, sticky=(W, E)
+ttk.Button(mainframe, style="TButton", text="Generate Report", command=setup).grid(
+    column=3, columnspan=2, row=14, ipady=5, sticky=(W, E)
 )
 
 for child in mainframe.winfo_children():
