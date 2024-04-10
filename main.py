@@ -90,7 +90,7 @@ def run(
                 auto_regenerate=False,
             )
 
-    with open(output_file, "wb") as output_stream:
+    with open("Property Reports/" + output_file, "wb") as output_stream:
         writer.write(output_stream)
 
     # # prints keys and values in the dict
