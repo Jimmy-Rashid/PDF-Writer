@@ -25,7 +25,77 @@ style.configure("TButton", font=text_font)
 # ----------------------------------------------------------------
 
 
-def run(
+def run_vancouver(
+    owner,
+    address,
+    zoning,
+    dimensions,
+    floor_area,
+    date,
+    check_1,
+    check_2,
+    check_3,
+    check_4,
+    check_5,
+    check_6,
+    check_7,
+    check_8,
+    check_setbacks,
+    check_50_percent,
+    check_186,
+    check_25_percent,
+    check_yes,
+    check_no,
+):
+    output_file = str(address) + " - Property Report.pdf"
+    city_text = str(city.get()) + ", BC"
+
+    reader = PdfReader(input_file)
+    # print(reader.get_fields().keys())  # prints the fields in the pdf
+
+    writer = PdfWriter()
+    writer.append(reader)
+
+    fields = {
+        "date": date,
+        "city": city_text,
+        "owner": owner,
+        "zoning": zoning,
+        "check_1": check_1,
+        "check_2": check_2,
+        "check_3": check_3,
+        "check_4": check_4,
+        "check_5": check_5,
+        "check_6": check_6,
+        "check_7": check_7,
+        "check_8": check_8,
+        "address_1": address,
+        "address_2": address,
+        "check_no": check_no,
+        "check_yes": check_yes,
+        "check_186": check_186,
+        "dimensions": dimensions,
+        "floor_area": floor_area,
+        "check_setbacks": check_setbacks,
+        "check_25_percent": check_25_percent,
+        "check_50_percent": check_50_percent,
+    }
+
+    keys = fields.keys()
+
+    for count in range(len(reader.pages)):
+        for field in range(len(fields)):
+            writer.update_page_form_field_values(
+                writer.pages[count],
+                {f"{list(keys)[field]}": f"{fields[list(keys)[field]]}"},
+                auto_regenerate=False,
+            )
+
+    with open("Property Reports/" + output_file, "wb") as output_stream:
+        writer.write(output_stream)
+
+
+def run_burnaby(
     owner,
     address,
     zoning,
@@ -92,10 +162,6 @@ def run(
     with open("Property Reports/" + output_file, "wb") as output_stream:
         writer.write(output_stream)
 
-    # # prints keys and values in the dict
-    # for x in range(7):
-    #     print(f"{list(keys)[x]}"+": "+f"{fields[list(keys)[x]]}")
-
 
 # ----------------------------------------------------------------
 
@@ -154,21 +220,40 @@ text_bank_1 = [
     "Date",
 ]
 
-text_bank_2 = [
-    "Property located in an eligible zoning district",
-    "Single-family home with vehicular access to the rear yard\nfrom a side or rear lane or residential street",
-    "Corner lot approval obtained from the engineering dpartment",
-    "Complies with Streamside Protection and Enhancement Area regulations",
-    "Accommodates up to three units (principal, secondary, laneway home),\nwhile remaining under a single title",
-    "Space for one van-accessible parking with electric vehicle charging",
-    "Allows for the provision of a private outdoor space and a \nrequired pathway access from the street",
-    "Laneway home has separate sewer, water, and power services",
-    "Free from heritage conservation constraints",
-    "Not able to build laneway home",
-    "Able to build laneway home",
-    "Maximum coverage dictated by setbacks",
-    "Maximum coverage dictated by 45% of area",
-]
+if str(city.get()).lower() == "vancouver":
+    print("yippee!!!")
+    text_bank_2 = [
+        "Is the project location in a residential zone permitting laneway housing?",
+        "Is the main building on the property a single detached house (with or without a secondary suite)?",
+        "Is the lot deep enough to fit a backyard and laneway house?",
+        "Is there a path for emergency access from the street to the entrance of the laneway house? ",
+        "Is there enough clearance for vehicular access?",
+        "Is there enough frontage to fit a laneway home?",
+        "Is the lot deep enough for the laneway home?",
+        "Is the lot clear of trees, overhead wires, easements, transformers or other objects?",
+        "Maximum coverage dictated by setbacks",
+        "Maximum coverage dictated by 50% site coverage",
+        "Maximum coverage dictated by GFA 186 M2",
+        "Maximum coverage dictated by GFA 25% lot",
+        "Able to build laneway home",
+        "Not able to build laneway home",
+    ]
+else:
+    text_bank_2 = [
+        "Property located in an eligible zoning district",
+        "Single-family home with vehicular access to the rear yard\nfrom a side or rear lane or residential street",
+        "Corner lot approval obtained from the engineering dpartment",
+        "Complies with Streamside Protection and Enhancement Area regulations",
+        "Accommodates up to three units (principal, secondary, laneway home),\nwhile remaining under a single title",
+        "Space for one van-accessible parking with electric vehicle charging",
+        "Allows for the provision of a private outdoor space and a \nrequired pathway access from the street",
+        "Laneway home has separate sewer, water, and power services",
+        "Free from heritage conservation constraints",
+        "Not able to build laneway home",
+        "Able to build laneway home",
+        "Maximum coverage dictated by setbacks",
+        "Maximum coverage dictated by 45% of area",
+    ]
 
 for x, label_text in enumerate(text_bank_1, start=1):
     ttk.Label(mainframe, text=label_text, font=text_font).grid(
@@ -185,45 +270,89 @@ for x, label_text in enumerate(text_bank_2, start=1):
 # Entry
 # ----------------------------------------------------------------
 
-owner = StringVar(value="")
-check_1 = StringVar(value="/Off")
-check_2 = StringVar(value="/Off")
-check_3 = StringVar(value="/Off")
-check_4 = StringVar(value="/Off")
-check_5 = StringVar(value="/Off")
-check_6 = StringVar(value="/Off")
-check_7 = StringVar(value="/Off")
-check_8 = StringVar(value="/Off")
-check_9 = StringVar(value="/Off")
-check_no = StringVar(value="/Off")
-check_yes = StringVar(value="/Off")
-check_setbacks = StringVar(value="/Off")
-check_45_percent = StringVar(value="/Off")
+if str(city.get()).lower() == "vancouver":
+    owner = StringVar(value="")
+    check_1 = StringVar(value="/Off")
+    check_2 = StringVar(value="/Off")
+    check_3 = StringVar(value="/Off")
+    check_4 = StringVar(value="/Off")
+    check_5 = StringVar(value="/Off")
+    check_6 = StringVar(value="/Off")
+    check_7 = StringVar(value="/Off")
+    check_8 = StringVar(value="/Off")
+    check_setbacks = StringVar(value="/Off")
+    check_50_percent = StringVar(value="/Off")
+    check_186 = StringVar(value="/Off")
+    check_25_percent = StringVar(value="/Off")
+    check_yes = StringVar(value="/Off")
+    check_no = StringVar(value="/Off")
 
-entries = [
-    owner,
-    address,
-    zoning,
-    dimensions,
-    floor_area,
-    date,
-]
+    entries = [
+        owner,
+        address,
+        zoning,
+        dimensions,
+        floor_area,
+        date,
+    ]
 
-check_list = [
-    check_1,
-    check_2,
-    check_3,
-    check_4,
-    check_5,
-    check_6,
-    check_7,
-    check_8,
-    check_9,
-    check_no,
-    check_yes,
-    check_setbacks,
-    check_45_percent,
-]
+    check_list = [
+        check_1,
+        check_2,
+        check_3,
+        check_4,
+        check_5,
+        check_6,
+        check_7,
+        check_8,
+        check_setbacks,
+        check_50_percent,
+        check_186,
+        check_25_percent,
+        check_yes,
+        check_no,
+    ]
+    
+else:
+    owner = StringVar(value="")
+    check_1 = StringVar(value="/Off")
+    check_2 = StringVar(value="/Off")
+    check_3 = StringVar(value="/Off")
+    check_4 = StringVar(value="/Off")
+    check_5 = StringVar(value="/Off")
+    check_6 = StringVar(value="/Off")
+    check_7 = StringVar(value="/Off")
+    check_8 = StringVar(value="/Off")
+    check_9 = StringVar(value="/Off")
+    check_no = StringVar(value="/Off")
+    check_yes = StringVar(value="/Off")
+    check_setbacks = StringVar(value="/Off")
+    check_45_percent = StringVar(value="/Off")
+
+    entries = [
+        owner,
+        address,
+        zoning,
+        dimensions,
+        floor_area,
+        date,
+    ]
+
+    check_list = [
+        check_1,
+        check_2,
+        check_3,
+        check_4,
+        check_5,
+        check_6,
+        check_7,
+        check_8,
+        check_9,
+        check_no,
+        check_yes,
+        check_setbacks,
+        check_45_percent,
+    ]
 
 for x, entry in enumerate(entries, start=1):
     ttk.Entry(mainframe, width=20, font=text_font, textvariable=entry).grid(
@@ -239,31 +368,55 @@ for x, check in enumerate(check_list, start=1):
 
 
 def setup():
-    run(
-        owner.get(),
-        address.get(),
-        zoning.get(),
-        dimensions.get(),
-        floor_area.get(),
-        date.get(),
-        check_1.get(),
-        check_2.get(),
-        check_3.get(),
-        check_4.get(),
-        check_5.get(),
-        check_6.get(),
-        check_7.get(),
-        check_8.get(),
-        check_9.get(),
-        check_no.get(),
-        check_yes.get(),
-        check_setbacks.get(),
-        check_45_percent.get(),
-    )
+    if str(city.get()).lower() == "vancouver":
+        run_vancouver(
+            owner.get(),
+            address.get(),
+            zoning.get(),
+            dimensions.get(),
+            floor_area.get(),
+            date.get(),
+            check_1.get(),
+            check_2.get(),
+            check_3.get(),
+            check_4.get(),
+            check_5.get(),
+            check_6.get(),
+            check_7.get(),
+            check_8.get(),
+            check_setbacks.get(),
+            check_50_percent.get(),
+            check_186.get(),
+            check_25_percent.get(),
+            check_yes.get(),
+            check_no.get(),
+        )
+    else:
+        run_burnaby(
+            owner.get(),
+            address.get(),
+            zoning.get(),
+            dimensions.get(),
+            floor_area.get(),
+            date.get(),
+            check_1.get(),
+            check_2.get(),
+            check_3.get(),
+            check_4.get(),
+            check_5.get(),
+            check_6.get(),
+            check_7.get(),
+            check_8.get(),
+            check_9.get(),
+            check_no.get(),
+            check_yes.get(),
+            check_setbacks.get(),
+            check_45_percent.get(),
+        )
 
 
 ttk.Button(mainframe, style="TButton", text="Generate Report", command=setup).grid(
-    column=3, columnspan=2, row=14, ipady=5, sticky=(W, E)
+    column=3, columnspan=2, row=99, ipady=5, sticky=(W, E)
 )
 
 for child in mainframe.winfo_children():
