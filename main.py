@@ -46,9 +46,8 @@ def run(
     check_setbacks,
     check_45_percent,
 ):
-    city_text = str(city.get()) + ", BC"
-    input_file = "Burnaby Template - Form.pdf"
     output_file = str(address) + " - Property Report.pdf"
+    city_text = str(city.get()) + ", BC"
 
     reader = PdfReader(input_file)
     # print(reader.get_fields().keys())  # prints the fields in the pdf
@@ -117,6 +116,12 @@ for line in page_1.splitlines():
 
 address = StringVar(value=f"{list_1[1]}")
 city = StringVar(value=f"{list_1[2]}")
+
+if str(city.get()).lower() == "vancouver":
+    input_file = "Template Forms/Vancouver Template - Form.pdf"
+else:
+    input_file = "Template Forms/Burnaby Template - Form.pdf"
+
 country = StringVar(value=f"{list_1[4]}")  # unused in report
 postal_code = StringVar(value=f"{list_1[3]}")  # unused in report
 property_id = StringVar(value=f"{list_1[5].split(' ')[1]}")  # unused in report
